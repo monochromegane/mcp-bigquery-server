@@ -32,7 +32,7 @@ func NewBigQueryServer(ctx context.Context, project, location string, datasets [
 	s := &BigQueryServer{
 		server: server.NewMCPServer(
 			"bigquery-server",
-			"0.0.1",
+			version,
 		),
 	}
 
