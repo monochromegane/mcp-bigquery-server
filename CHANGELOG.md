@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.0.3](https://github.com/monochromegane/mcp-bigquery-server/compare/v0.0.2...v0.0.3) - 2025-02-09
+- Add test CI by @monochromegane in https://github.com/monochromegane/mcp-bigquery-server/pull/4
+
 ## [v0.0.2](https://github.com/monochromegane/mcp-bigquery-server/compare/v0.0.1...v0.0.2) - 2025-02-09
 - Add release CI by @monochromegane in https://github.com/monochromegane/mcp-bigquery-server/pull/3
 
