@@ -2,12 +2,14 @@ package mcp_bigquery_server
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/alecthomas/kong"
 )
 
 type CLI struct {
-	Start struct {
+	Version kong.VersionFlag `help:"Show version"`
+	Start   struct {
 		Project  string   `required:"" help:"Project ID"`
 		Location string   `default:"asia-northeast1" help:"Location"`
 		Dataset  []string `required:"" help:"Allowed datasets"`
@@ -19,7 +21,9 @@ func New() (*CLI, error) {
 }
 
 func (c *CLI) Run(ctx context.Context) error {
-	k := kong.Parse(c)
+	k := kong.Parse(c, kong.Vars{
+		"version": fmt.Sprintf("%s v%s (rev:%s)", "mcp-bigquery-server", version, revision),
+	})
 
 	switch k.Command() {
 	case "start":
