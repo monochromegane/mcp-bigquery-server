@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.0.6](https://github.com/monochromegane/mcp-bigquery-server/compare/v0.0.5...v0.0.6) - 2025-02-09
+- Fix broken Makefile by @monochromegane in https://github.com/monochromegane/mcp-bigquery-server/pull/10
+
 ## [v0.0.5](https://github.com/monochromegane/mcp-bigquery-server/compare/v0.0.4...v0.0.5) - 2025-02-09
 - Fix release action by @monochromegane in https://github.com/monochromegane/mcp-bigquery-server/pull/8
 
