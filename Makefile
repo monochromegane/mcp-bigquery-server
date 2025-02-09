@@ -1,6 +1,7 @@
+COMMAND = mcp-bigquery-server
 VERSION = $(shell gobump show -r .)
 CURRENT_REVISION = $(shell git rev-parse --short HEAD)
-BUILD_LDFLAGS = "-s -w -X main.revision=$(CURRENT_REVISION)"
+BUILD_LDFLAGS = "-s -w -X github.com/monochromegane/$(COMMAND).revision=$(CURRENT_REVISION)"
 DIST_DIR = dist
 u := $(if $(update),-u)
 
@@ -13,11 +14,11 @@ test:
 
 .PHONY: build
 build:
-	go build -ldflags=$(BUILD_LDFLAGS) .
+	go build -ldflags=$(BUILD_LDFLAGS) ./cmd/$(COMMAND)
 
 .PHONY: install
 install:
-	go install -ldflags=$(BUILD_LDFLAGS) .
+	go install -ldflags=$(BUILD_LDFLAGS) ./cmd/$(COMMAND)
 
 .PHONY: deps
 deps:
@@ -38,7 +39,7 @@ credits: go.sum deps devel-deps
 .PHONY: cross-build
 cross-build: credits
 	rm -rf $(DIST_DIR)
-	goxz -pv=v$(VERSION) -build-ldflags=$(BUILD_LDFLAGS) -static -d $(DIST_DIR) .
+	goxz -pv=v$(VERSION) -build-ldflags=$(BUILD_LDFLAGS) -static -d $(DIST_DIR) ./cmd/$(COMMAND)
 
 .PHONY: upload
 upload:
