@@ -49,3 +49,15 @@ func (c *BigQueryClient) GetTableSchema(ctx context.Context, dataset, table stri
 	}
 	return md.Schema, nil
 }
+
+func (c *BigQueryClient) DryRunQuery(ctx context.Context, query string, dataset string) (*bigquery.JobStatus, error) {
+	q := c.client.Query(query)
+	q.DefaultProjectID = c.Project
+	q.DefaultDatasetID = dataset
+	q.DryRun = true
+	job, err := q.Run(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return job.LastStatus(), nil
+}

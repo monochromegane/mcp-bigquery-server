@@ -17,6 +17,7 @@ const (
 	LIST_ALLOWED_DATASETS ToolName = "list_allowed_datasets"
 	LIST_TABLES           ToolName = "list_tables"
 	GET_TABLE_SCHEMA      ToolName = "get_table_schema"
+	DRY_RUN_QUERY         ToolName = "dry_run_query"
 )
 
 func StartServer(ctx context.Context, c *CLI) error {
@@ -69,6 +70,18 @@ func NewBigQueryServer(ctx context.Context, project, location string, datasets [
 			mcp.Required(),
 		),
 	), s.handleGetTableSchema)
+
+	s.server.AddTool(mcp.NewTool(string(DRY_RUN_QUERY),
+		mcp.WithDescription("Dry run a query to get the estimated cost and time."),
+		mcp.WithString("dataset",
+			mcp.Description("The dataset to dry run the query on"),
+			mcp.Required(),
+		),
+		mcp.WithString("query",
+			mcp.Description("The query to dry run"),
+			mcp.Required(),
+		),
+	), s.handleDryRunQuery)
 
 	return s, nil
 }
@@ -172,6 +185,39 @@ func (s *BigQueryServer) handleGetTableSchema(
 			mcp.TextContent{
 				Type: "text",
 				Text: fmt.Sprintf("Schema for table %s in dataset %s:\n\n%s", table, dataset, schemaStr),
+			},
+		},
+	}, nil
+}
+
+func (s *BigQueryServer) handleDryRunQuery(
+	ctx context.Context,
+	request mcp.CallToolRequest,
+) (*mcp.CallToolResult, error) {
+	arguments := request.Params.Arguments
+	dataset, ok := arguments["dataset"].(string)
+	if !ok {
+		return nil, fmt.Errorf("dataset must be a string")
+	}
+	if !slices.Contains(s.datasets, dataset) {
+		return nil, fmt.Errorf("dataset %s not allowed", dataset)
+	}
+	query, ok := arguments["query"].(string)
+	if !ok {
+		return nil, fmt.Errorf("query must be a string")
+	}
+
+	status, err := s.client.DryRunQuery(ctx, query, dataset)
+	if err != nil {
+		return nil, err
+	}
+	errors := status.Errors
+	totalBytesProcessed := status.Statistics.TotalBytesProcessed
+	return &mcp.CallToolResult{
+		Content: []interface{}{
+			mcp.TextContent{
+				Type: "text",
+				Text: fmt.Sprintf("Errors: %v\nTotal bytes processed: %d", errors, totalBytesProcessed),
 			},
 		},
 	}, nil
