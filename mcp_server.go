@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"slices"
+	"strings"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -12,8 +14,9 @@ import (
 type ToolName string
 
 const (
-	LIST_TABLES      ToolName = "list_tables"
-	GET_TABLE_SCHEMA ToolName = "get_table_schema"
+	LIST_ALLOWED_DATASETS ToolName = "list_allowed_datasets"
+	LIST_TABLES           ToolName = "list_tables"
+	GET_TABLE_SCHEMA      ToolName = "get_table_schema"
 )
 
 func StartServer(ctx context.Context, c *CLI) error {
@@ -34,6 +37,7 @@ func NewBigQueryServer(ctx context.Context, project, location string, datasets [
 			"bigquery-server",
 			version,
 		),
+		datasets: datasets,
 	}
 
 	client, err := NewBigQueryClient(ctx, project, location)
@@ -41,6 +45,10 @@ func NewBigQueryServer(ctx context.Context, project, location string, datasets [
 		return nil, err
 	}
 	s.client = client
+
+	s.server.AddTool(mcp.NewTool(string(LIST_ALLOWED_DATASETS),
+		mcp.WithDescription("Get a listing of all allowed datasets."),
+	), s.handleListAllowedDatasets)
 
 	s.server.AddTool(mcp.NewTool(string(LIST_TABLES),
 		mcp.WithDescription("Get a detailed listing of all tables in a specified dataset."),
@@ -66,12 +74,27 @@ func NewBigQueryServer(ctx context.Context, project, location string, datasets [
 }
 
 type BigQueryServer struct {
-	server *server.MCPServer
-	client *BigQueryClient
+	server   *server.MCPServer
+	client   *BigQueryClient
+	datasets []string
 }
 
 func (s *BigQueryServer) Serve() error {
 	return server.ServeStdio(s.server)
+}
+
+func (s *BigQueryServer) handleListAllowedDatasets(
+	ctx context.Context,
+	request mcp.CallToolRequest,
+) (*mcp.CallToolResult, error) {
+	return &mcp.CallToolResult{
+		Content: []interface{}{
+			mcp.TextContent{
+				Type: "text",
+				Text: fmt.Sprintf("Allowed datasets: %s", strings.Join(s.datasets, ", ")),
+			},
+		},
+	}, nil
 }
 
 func (s *BigQueryServer) handleListTables(
@@ -82,6 +105,9 @@ func (s *BigQueryServer) handleListTables(
 	dataset, ok := arguments["dataset"].(string)
 	if !ok {
 		return nil, fmt.Errorf("dataset must be a string")
+	}
+	if !slices.Contains(s.datasets, dataset) {
+		return nil, fmt.Errorf("dataset %s not allowed", dataset)
 	}
 
 	tables, err := s.client.ListTables(ctx, dataset)
@@ -112,6 +138,9 @@ func (s *BigQueryServer) handleGetTableSchema(
 	dataset, ok := arguments["dataset"].(string)
 	if !ok {
 		return nil, fmt.Errorf("dataset must be a string")
+	}
+	if !slices.Contains(s.datasets, dataset) {
+		return nil, fmt.Errorf("dataset %s not allowed", dataset)
 	}
 	table, ok := arguments["table"].(string)
 	if !ok {
