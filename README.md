@@ -6,7 +6,14 @@
 
 ## Overview
 
-MCP BigQuery Server is a server that allows you to query BigQuery tables using MCP.
+MCP BigQuery Server is a server that allows you to query BigQuery tables using MCP. Written in Go, it's lightweight and easy to install with just a few commands.
+
+## Installation
+
+```sh
+$ brew tap monochromegane/tap
+$ brew install monochromegane/tap/mcp-bigquery-server
+```
 
 ## Available Tools
 
