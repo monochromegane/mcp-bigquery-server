@@ -8,6 +8,38 @@
 
 MCP BigQuery Server is a server that allows you to query BigQuery tables using MCP.
 
+## Available Tools
+
+- `list_allowed_datasets`: Get a listing of all allowed datasets.
+- `list_tables`: Get a detailed listing of all tables in a specified dataset.
+- `get_table_schema`: Get the schema of a specified table in a specified dataset.
+- `dry_run_query`: Dry run a query to get the estimated cost and time.
+
+## Registration
+
+To use MCP BigQuery Server in Cursor, add the following configuration to your `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "BigQuery": {
+      "command": "mcp-bigquery-server",
+      "args": [
+        "start",
+        "--project",
+        "sample-project",
+        "--dataset",
+        "test1",
+        "--dataset",
+        "test2"
+      ]
+    }
+  }
+}
+```
+
+Note: You can specify multiple datasets by repeating the `--dataset` argument.
+
 ## License
 
 [MIT](https://github.com/monochromegane/mcp-bigquery-server/blob/main/LICENSE)
