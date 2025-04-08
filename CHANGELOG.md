@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.7](https://github.com/monochromegane/mcp-bigquery-server/compare/v0.0.6...v0.0.7) - 2025-04-08
+- Add list allowed datasets. by @monochromegane in https://github.com/monochromegane/mcp-bigquery-server/pull/12
+- Add dry run tool. by @monochromegane in https://github.com/monochromegane/mcp-bigquery-server/pull/14
+
 ## [v0.0.6](https://github.com/monochromegane/mcp-bigquery-server/compare/v0.0.5...v0.0.6) - 2025-02-09
 - Fix broken Makefile by @monochromegane in https://github.com/monochromegane/mcp-bigquery-server/pull/10
 
