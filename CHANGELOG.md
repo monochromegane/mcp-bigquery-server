@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.8](https://github.com/monochromegane/mcp-bigquery-server/compare/v0.0.7...v0.0.8) - 2025-04-09
+- Update readme. by @monochromegane in https://github.com/monochromegane/mcp-bigquery-server/pull/15
+- Remove unnecessary location settings. by @monochromegane in https://github.com/monochromegane/mcp-bigquery-server/pull/17
+
 ## [v0.0.7](https://github.com/monochromegane/mcp-bigquery-server/compare/v0.0.6...v0.0.7) - 2025-04-08
 - Add list allowed datasets. by @monochromegane in https://github.com/monochromegane/mcp-bigquery-server/pull/12
 - Add dry run tool. by @monochromegane in https://github.com/monochromegane/mcp-bigquery-server/pull/14
