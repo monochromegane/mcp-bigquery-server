@@ -10,9 +10,8 @@ import (
 type CLI struct {
 	Version kong.VersionFlag `help:"Show version"`
 	Start   struct {
-		Project  string   `required:"" help:"Project ID"`
-		Location string   `default:"asia-northeast1" help:"Location"`
-		Dataset  []string `required:"" help:"Allowed datasets"`
+		Project string   `required:"" help:"Project ID"`
+		Dataset []string `required:"" help:"Allowed datasets"`
 	} `cmd:"" help:"Start the MCP BigQuery server"`
 }
 
