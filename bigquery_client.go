@@ -8,21 +8,18 @@ import (
 )
 
 type BigQueryClient struct {
-	Project  string
-	Location string
-	client   *bigquery.Client
+	Project string
+	client  *bigquery.Client
 }
 
-func NewBigQueryClient(ctx context.Context, project, location string) (*BigQueryClient, error) {
+func NewBigQueryClient(ctx context.Context, project string) (*BigQueryClient, error) {
 	client, err := bigquery.NewClient(ctx, project)
 	if err != nil {
 		return nil, err
 	}
-	client.Location = location
 	return &BigQueryClient{
-		Project:  project,
-		Location: location,
-		client:   client,
+		Project: project,
+		client:  client,
 	}, nil
 }
 

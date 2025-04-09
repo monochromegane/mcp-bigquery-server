@@ -21,7 +21,7 @@ const (
 )
 
 func StartServer(ctx context.Context, c *CLI) error {
-	bs, err := NewBigQueryServer(ctx, c.Start.Project, c.Start.Location, c.Start.Dataset)
+	bs, err := NewBigQueryServer(ctx, c.Start.Project, c.Start.Dataset)
 	if err != nil {
 		log.Fatalf("Failed to create server: %v", err)
 	}
@@ -32,7 +32,7 @@ func StartServer(ctx context.Context, c *CLI) error {
 	return nil
 }
 
-func NewBigQueryServer(ctx context.Context, project, location string, datasets []string) (*BigQueryServer, error) {
+func NewBigQueryServer(ctx context.Context, project string, datasets []string) (*BigQueryServer, error) {
 	s := &BigQueryServer{
 		server: server.NewMCPServer(
 			"bigquery-server",
@@ -41,7 +41,7 @@ func NewBigQueryServer(ctx context.Context, project, location string, datasets [
 		datasets: datasets,
 	}
 
-	client, err := NewBigQueryClient(ctx, project, location)
+	client, err := NewBigQueryClient(ctx, project)
 	if err != nil {
 		return nil, err
 	}
